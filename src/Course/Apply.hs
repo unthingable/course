@@ -24,16 +24,16 @@ infixl 4 <*>
 -- >>> Id (+10) <*> Id 8
 -- Id 18
 instance Apply Id where
-  (<*>) =
-    error "todo"
+  Id f <*> Id x = Id (f x)
 
 -- | Implement @Apply@ instance for @List@.
 --
 -- >>> (+1) :. (*2) :. Nil <*> 1 :. 2 :. 3 :. Nil
 -- [2,3,4,2,4,6]
 instance Apply List where
-  (<*>) =
-    error "todo"
+  Nil <*> _ = Nil
+  _ <*> Nil = Nil
+  fs <*> xs = flatten $ (\f -> f <$> xs) <$> fs
 
 -- | Implement @Apply@ instance for @Optional@.
 --
@@ -46,8 +46,9 @@ instance Apply List where
 -- >>> Full (+8) <*> Empty
 -- Empty
 instance Apply Optional where
-  (<*>) =
-    error "todo"
+  Empty <*> _ = Empty
+  _ <*> Empty = Empty
+  Full f <*> Full x = Full (f x)
 
 -- | Implement @Apply@ instance for reader.
 --
@@ -66,8 +67,7 @@ instance Apply Optional where
 -- >>> ((*) <*> (+2)) 3
 -- 15
 instance Apply ((->) t) where
-  (<*>) =
-    error "todo"
+  f <*> g = (\x -> f x (g x))
 
 -- | Apply a binary function in the environment.
 --
@@ -94,8 +94,7 @@ lift2 ::
   -> f a
   -> f b
   -> f c
-lift2 =
-  error "todo"
+lift2 a b c = a <$> b <*> c
 
 -- | Apply a ternary function in the Monad environment.
 --
@@ -126,8 +125,7 @@ lift3 ::
   -> f b
   -> f c
   -> f d
-lift3 =
-  error "todo"
+lift3 a b c d = a <$> b <*> c <*> d
 
 -- | Apply a quaternary function in the environment.
 --
@@ -159,8 +157,7 @@ lift4 ::
   -> f c
   -> f d
   -> f e
-lift4 =
-  error "todo"
+lift4 a b c d e = a <$> b <*> c <*> d <*> e
 
 -- | Sequence, discarding the value of the first argument.
 -- Pronounced, right apply.
@@ -185,8 +182,7 @@ lift4 =
   f a
   -> f b
   -> f b
-(*>) =
-  error "todo"
+a *> b = (\_ y -> y) <$> a <*> b
 
 -- | Sequence, discarding the value of the second argument.
 -- Pronounced, left apply.
@@ -211,8 +207,7 @@ lift4 =
   f b
   -> f a
   -> f b
-(<*) =
-  error "todo"
+a <* b = (\x _ -> x) <$> a <*> b
 
 -----------------------
 -- SUPPORT LIBRARIES --

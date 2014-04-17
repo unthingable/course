@@ -12,6 +12,14 @@ import Course.Optional
 import qualified Prelude as P
 
 class (Applicative f, Bind f) => Monad f where
+  -- return :: a -> f a
+  -- return = pure
+
+  -- (>>=) :: f a -> (a -> f b) -> f b
+  -- (>>=) = (Course.Bind.>>=)
+
+  -- (>>) :: f a -> f b -> f b
+  -- x >> y = x Course.Bind.>>= \_ -> y
 
 instance Monad Id where
 

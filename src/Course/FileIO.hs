@@ -64,6 +64,10 @@ main ::
   IO ()
 main =
   error "todo"
+  -- do
+  -- args <- getArgs
+  -- putStrLn
+  -- run (headOr args "")
 
 type FilePath =
   Chars
@@ -72,31 +76,37 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo"
+run path = do
+  paths <- lines <$> readFile path
+  files <- getFiles paths
+  printFiles files
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo"
+getFiles paths = sequence $ getFile <$> paths
+
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo"
+getFile path = do
+  contents <- readFile path
+  return (path, contents)
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo"
+printFiles ff = foldRight (\(a,b) _ -> printFile a b) void
+  -- ff >>= printFile
+  -- (\(x,y) -> printFile x y)
+  -- error "todo"
+  -- sequence $ (\(x,y) -> printFile x y) <$> ff
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo"
-
+printFile path contents = do
+  putStrLn ("============ " ++ path)
+  putStrLn contents
